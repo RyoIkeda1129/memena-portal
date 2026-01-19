@@ -1,6 +1,6 @@
 {
-  "name": "VRC Instant Portal",
-  "short_name": "VRC起動",
+  "name": "メメナの魔王闘技場",
+  "short_name": "メメナの魔王闘技場",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0f1214",
@@ -12,4 +12,5 @@
       "type": "image/x-icon"
     }
   ]
+
 }
