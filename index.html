@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VRC Instant Portal</title>
+    <title>メメナの魔王闘技場</title>
     <link rel="manifest" href="manifest.json">
     <style>
         body {
@@ -13,51 +13,72 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
         }
-        .container { text-align: center; }
-        h1 { font-size: 1.2rem; color: #888; margin-bottom: 2rem; }
-        button {
-            padding: 25px 50px;
-            font-size: 1.4rem;
+        .container { text-align: center; width: 90%; max-width: 400px; }
+        h1 { font-size: 1.8rem; color: #ff3e3e; margin-bottom: 2rem; text-shadow: 0 0 10px rgba(255, 62, 62, 0.5); }
+        
+        /* ボタン共通設定 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 22px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #ffffff;
-            background: linear-gradient(135deg, #00d1ff 0%, #007aff 100%);
             border: none;
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 209, 255, 0.3);
-            transition: transform 0.1s, box-shadow 0.1s;
+            transition: all 0.1s;
         }
-        button:active {
-            transform: scale(0.95);
-            box-shadow: 0 4px 10px rgba(0, 209, 255, 0.2);
-        }
-        p { margin-top: 1.5rem; font-size: 0.8rem; color: #555; }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
+
+        /* インスタンス別の色設定 */
+        .invite-plus { background: linear-gradient(135deg, #6610f2, #6f42c1); border-bottom: 4px solid #480ca8; } /* 紫 */
+        .friends { background: linear-gradient(135deg, #00d1ff, #007aff); border-bottom: 4px solid #0056b3; } /* 青 */
+        .friends-plus { background: linear-gradient(135deg, #00ff88, #00a35c); border-bottom: 4px solid #007a45; } /* 緑 */
+
+        p { font-size: 0.85rem; color: #555; margin-top: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>NOCTLUNE PORTAL</h1>
-        <button onclick="launchVRC()">OPEN NEW INSTANCE</button>
-        <p>Region: JP / Type: Invite Only</p>
+        <h1>メメナの魔王闘技場</h1>
+        
+        <button class="btn invite-plus" onclick="launchVRC('hidden')">INVITE +</button>
+        <button class="btn friends" onclick="launchVRC('friends')">FRIENDS ONLY</button>
+        <button class="btn friends-plus" onclick="launchVRC('friendsplus')">FRIENDS +</button>
+
+        <p>Region: JP / New Instance ID: Date.now()</p>
     </div>
 
     <script>
-        function launchVRC() {
-            // 固定データ
+        function launchVRC(type) {
             const worldId = "wrld_0bbac6e6-5c80-40c2-80dd-273e960ea814";
             const userId = "usr_20e7f4bd-4b77-40d1-abfb-7e6a63350bb4";
+            const uniqueId = Date.now();
             
-            // 毎回ランダムなIDを生成
-            const rand = Math.floor(Math.random() * 1000000);
+            let instanceType = "";
             
-            // 起動URL（Invite Only設定）
-            const url = `vrchat://launch?id=${worldId}:${rand}~private(${userId})~region(jp)`;
+            switch(type) {
+                case 'hidden':
+                    // インバイト＋ (Hidden) 設定
+                    instanceType = `~hidden(${userId})~canRequestInvite`;
+                    break;
+                case 'friends':
+                    // フレンドのみ設定
+                    instanceType = `~friends(${userId})`;
+                    break;
+                case 'friendsplus':
+                    // フレンド＋設定
+                    instanceType = `~friends(${userId})~canRequestInvite`;
+                    break;
+            }
             
-            // 起動実行
+            const url = `vrchat://launch?id=${worldId}:${uniqueId}${instanceType}~region(jp)`;
             window.location.href = url;
         }
     </script>
